@@ -1,0 +1,264 @@
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.balance {
+    font-size: 18px;
+    font-weight: bold;
+    background: rgba(255,255,255,0.1);
+    padding: 10px 20px;
+    border-radius: 25px;
+    display: inline-block;
+}
+
+/* Wheel Styles */
+.wheel-container {
+    position: relative;
+    margin: 20px 0;
+}
+
+.wheel {
+    width: 280px;
+    height: 280px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.wheel-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #2c3e50;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.wheel-numbers {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.wheel-sector {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    transform-origin: bottom right;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 20px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.wheel-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: #e74c3c;
+    border-radius: 50%;
+    z-index: 10;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.wheel-pointer {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 30px solid #e74c3c;
+    z-index: 20;
+}
+
+/* Controls */
+.controls {
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 15px;
+    margin: 20px 0;
+}
+
+.bet-section, .multipliers {
+    margin-bottom: 15px;
+}
+
+.bet-section h3, .multipliers h3 {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.bet-amount {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.multiplier-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.multiplier-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #34495e;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.multiplier-btn.active {
+    background: #e74c3c;
+    transform: scale(1.1);
+}
+
+.spin-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.spin-btn:hover {
+    transform: scale(1.05);
+}
+
+.spin-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Result */
+.result {
+    text-align: center;
+    margin: 20px 0;
+    min-height: 60px;
+}
+
+.result-text {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.win-amount {
+    font-size: 24px;
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+/* History */
+.history {
+    margin-top: 20px;
+}
+
+.history-list {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.history-item {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.history-item.win {
+    background: #27ae60;
+}
+
+.history-item.lose {
+    background: #c0392b;
+}
+
+/* Button styles */
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #3498db;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background: #2980b9;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+.winning {
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spinning {
+    animation: spin 3s cubic-bezier(0.1, 0.1, 0.1, 1);
+}
+```
