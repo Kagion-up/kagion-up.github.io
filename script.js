@@ -1,4 +1,3 @@
-```javascript
 class RouletteGame {
     constructor() {
         this.balance = 1000;
@@ -213,4 +212,3 @@ function selectMultiplier(multiplier) {
 function spinWheel() {
     window.game.spinWheel();
 }
-```
