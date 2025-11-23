@@ -3,107 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎰 TON Roulette</title>
+    <title>🎰 TON Roulette Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <!-- Шапка -->
-        <div class="header">
-            <h1>🎰 TON ROULETTE</h1>
-            <div class="user-info">
-                <div class="balance">
-                    <span>Баланс: </span>
-                    <span id="balance">0</span> 💎
+        <!-- Навигация -->
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="game">🎮 Игра</button>
+            <button class="tab-btn" data-tab="tournament">🏆 Турниры</button>
+            <button class="tab-btn" data-tab="referral">👥 Рефералы</button>
+            <button class="tab-btn" data-tab="wallet">💰 Кошелёк</button>
+        </nav>
+
+        <!-- Вкладка Игры -->
+        <div id="gameTab" class="tab-content active">
+            <!-- Режимы игры -->
+            <div class="game-modes">
+                <h3>🎯 Режимы игры</h3>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" data-mode="classic">Классик</button>
+                    <button class="mode-btn" data-mode="crash">Crash</button>
+                    <button class="mode-btn" data-mode="jackpot">Джекпот</button>
+                    <button class="mode-btn" data-mode="tournament">Турнир</button>
                 </div>
-                <button id="connectWallet" class="wallet-btn">🔗 Подключить TON</button>
+            </div>
+
+            <!-- Основная игровая зона -->
+            <div class="game-area">
+                <!-- Джекпот -->
+                <div class="jackpot-display">
+                    <div class="jackpot-title">🎊 ДЖЕКПОТ</div>
+                    <div class="jackpot-amount" id="jackpotAmount">1,250 TON</div>
+                    <div class="jackpot-timer" id="jackpotTimer">Следующий розыгрыш: 2:30</div>
+                </div>
+
+                <!-- Рулетка -->
+                <div class="wheel-container">
+                    <div class="wheel" id="wheel">
+                        <div class="wheel-inner">
+                            <div class="wheel-numbers" id="wheelNumbers"></div>
+                            <div class="wheel-center"></div>
+                            <div class="wheel-pointer"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ставки -->
+                <div class="betting-section">
+                    <div class="bet-controls">
+                        <div class="quick-bets">
+                            <button onclick="setQuickBet(1)">1</button>
+                            <button onclick="setQuickBet(5)">5</button>
+                            <button onclick="setQuickBet(10)">10</button>
+                            <button onclick="setQuickBet(25)">25</button>
+                            <button onclick="setQuickBet(0.5)">½</button>
+                            <button onclick="setQuickBet(2)">2x</button>
+                        </div>
+                        <div class="bet-amount">
+                            <button onclick="changeBet(-0.1)">-0.1</button>
+                            <input type="number" id="betInput" value="1" step="0.1" min="0.1" max="1000">
+                            <span>TON</span>
+                            <button onclick="changeBet(0.1)">+0.1</button>
+                        </div>
+                    </div>
+
+                    <div class="multiplier-buttons">
+                        <button class="mult-btn" data-mult="2" onclick="selectMultiplier(2)">2x</button>
+                        <button class="mult-btn" data-mult="5" onclick="selectMultiplier(5)">5x</button>
+                        <button class="mult-btn active" data-mult="10" onclick="selectMultiplier(10)">10x</button>
+                        <button class="mult-btn" data-mult="20" onclick="selectMultiplier(20)">20x</button>
+                        <button class="mult-btn" data-mult="50" onclick="selectMultiplier(50)">50x</button>
+                        <button class="mult-btn" data-mult="100" onclick="selectMultiplier(100)">100x</button>
+                    </div>
+
+                    <button class="place-bet-btn" id="placeBetBtn" onclick="placeBet()">
+                        🎯 СТАВКА: <span id="betDisplay">1</span> TON
+                    </button>
+                </div>
+            </div>
+
+            <!-- Статистика -->
+            <div class="game-stats">
+                <div class="stat-item">
+                    <span>Возможный выигрыш:</span>
+                    <span id="potentialWin">10 TON</span>
+                </div>
+                <div class="stat-item">
+                    <span>Шанс выигрыша:</span>
+                    <span id="winChance">10%</span>
+                </div>
+                <div class="stat-item">
+                    <span>Баланс:</span>
+                    <span id="balance">0 TON</span>
+                </div>
             </div>
         </div>
 
-        <!-- Кошелёк -->
-        <div id="walletSection" class="wallet-section hidden">
-            <h3>💰 Управление балансом</h3>
-            <div class="wallet-controls">
-                <button onclick="deposit(5)">+5 TON</button>
-                <button onclick="deposit(10)">+10 TON</button>
-                <button onclick="deposit(20)">+20 TON</button>
-                <button onclick="withdraw()">Вывести</button>
+        <!-- Вкладка Турниров -->
+        <div id="tournamentTab" class="tab-content">
+            <div class="tournament-header">
+                <h2>🏆 Текущие Турниры</h2>
+                <div class="tournament-timer" id="tournamentTimer">
+                    До конца: 3д 12ч 45м
+                </div>
             </div>
-            <div class="wallet-address" id="walletAddress"></div>
+
+            <div class="tournaments-list" id="tournamentsList">
+                <!-- Турниры загружаются динамически -->
+            </div>
+
+            <div class="leaderboard">
+                <h3>🏅 Топ игроков</h3>
+                <div class="leaderboard-list" id="leaderboardList">
+                    <!-- Лидерборд загружается динамически -->
+                </div>
+            </div>
         </div>
 
-        <!-- Игровая зона -->
-        <div class="game-area">
-            <!-- Таймер раунда -->
-            <div class="round-timer">
-                <div class="timer-bar">
-                    <div class="timer-progress" id="timerProgress"></div>
+        <!-- Вкладка Рефералов -->
+        <div id="referralTab" class="tab-content">
+            <div class="referral-stats">
+                <div class="ref-stat">
+                    <span>Приглашено друзей</span>
+                    <span id="refCount">0</span>
                 </div>
-                <div class="timer-text" id="timerText">Ставки принимаются: 30с</div>
+                <div class="ref-stat">
+                    <span>Заработано</span>
+                    <span id="refEarned">0 TON</span>
+                </div>
+                <div class="ref-stat">
+                    <span>Текущий бонус</span>
+                    <span id="refBonus">5%</span>
+                </div>
             </div>
 
-            <!-- Рулетка -->
-            <div class="wheel-container">
-                <div class="wheel" id="wheel">
-                    <div class="wheel-inner">
-                        <div class="wheel-numbers" id="wheelNumbers"></div>
-                        <div class="wheel-center"></div>
-                        <div class="wheel-pointer"></div>
+            <div class="referral-link">
+                <h3>🔗 Ваша реферальная ссылка</h3>
+                <div class="link-container">
+                    <input type="text" id="refLink" readonly>
+                    <button onclick="copyRefLink()">📋</button>
+                </div>
+                <p class="ref-note">Получайте 5% от всех ставок приглашённых друзей!</p>
+            </div>
+
+            <div class="referral-history">
+                <h3>📊 Ваши рефералы</h3>
+                <div class="ref-list" id="refList">
+                    <!-- Список рефералов -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка Кошелька -->
+        <div id="walletTab" class="tab-content">
+            <div class="wallet-info">
+                <div class="wallet-address">
+                    <span>Адрес:</span>
+                    <span id="walletAddress">Не подключен</span>
+                </div>
+                <button id="connectWallet" class="wallet-connect-btn">
+                    🔗 Подключить TON кошелёк
+                </button>
+            </div>
+
+            <div class="wallet-actions">
+                <div class="deposit-section">
+                    <h3>📥 Пополнить баланс</h3>
+                    <div class="deposit-buttons">
+                        <button onclick="deposit(1)">1 TON</button>
+                        <button onclick="deposit(5)">5 TON</button>
+                        <button onclick="deposit(10)">10 TON</button>
+                        <button onclick="deposit(50)">50 TON</button>
+                        <button onclick="deposit(100)">100 TON</button>
+                    </div>
+                    <div class="custom-deposit">
+                        <input type="number" id="customAmount" placeholder="Своя сумма" min="0.1" step="0.1">
+                        <button onclick="customDeposit()">Внести</button>
+                    </div>
+                </div>
+
+                <div class="withdraw-section">
+                    <h3>📤 Вывести средства</h3>
+                    <div class="withdraw-controls">
+                        <input type="text" id="withdrawAddress" placeholder="TON адрес">
+                        <input type="number" id="withdrawAmount" placeholder="Сумма" min="1">
+                        <button onclick="withdraw()">Вывести</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Ставки -->
-            <div class="betting-section">
-                <h3>💵 Сделать ставку</h3>
-                <div class="bet-controls">
-                    <div class="bet-amount">
-                        <button onclick="changeBet(-1)">-1</button>
-                        <span id="currentBet">1</span> TON
-                        <button onclick="changeBet(1)">+1</button>
-                    </div>
-                    <div class="bet-multiplier">
-                        <select id="multiplierSelect" onchange="updatePotentialWin()">
-                            <option value="2">2x (50%)</option>
-                            <option value="5">5x (20%)</option>
-                            <option value="10" selected>10x (10%)</option>
-                            <option value="20">20x (5%)</option>
-                        </select>
-                    </div>
+            <div class="transaction-history">
+                <h3>📋 История операций</h3>
+                <div class="tx-list" id="txList">
+                    <!-- История транзакций -->
                 </div>
-                <div class="potential-win">
-                    Возможный выигрыш: <span id="potentialWin">10</span> TON
-                </div>
-                <button class="place-bet-btn" id="placeBetBtn" onclick="placeBet()">🎯 Сделать ставку</button>
             </div>
-        </div>
-
-        <!-- Текущие ставки -->
-        <div class="current-bets">
-            <h3>📊 Текущие ставки</h3>
-            <div class="bets-list" id="betsList">
-                <div class="no-bets">Ставок пока нет</div>
-            </div>
-        </div>
-
-        <!-- История игроков -->
-        <div class="players-online">
-            <h3>👥 Игроки онлайн: <span id="playersCount">0</span></h3>
-            <div class="players-list" id="playersList"></div>
-        </div>
-
-        <!-- Последние результаты -->
-        <div class="game-history">
-            <h3>📈 История игр</h3>
-            <div class="history-list" id="historyList"></div>
         </div>
 
         <!-- Уведомления -->
         <div id="notification" class="notification hidden"></div>
     </div>
 
+    <script src="https://unpkg.com/tonweb/dist/tonweb.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
