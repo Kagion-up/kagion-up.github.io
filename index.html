@@ -3,86 +3,461 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KaRoTon - Играй и Выигрывай!</title>
+    <title>Lucky Турнир</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 16px;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .close-btn {
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .tournament-title {
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .player-card {
+            background-color: #2a2a2a;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .player-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .player-name {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .player-status {
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        .player-stats {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        
+        .player-ton {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffc107;
+        }
+        
+        .player-chance {
+            font-size: 12px;
+            color: #aaa;
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: #333;
+            margin: 16px 0;
+        }
+        
+        .total-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .total-label {
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        .total-amount {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        
+        .timer {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+        
+        .bet-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2a2a2a;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .bet-amount {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .add-pvp-btn {
+            background-color: #3390ec;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .game-info {
+            text-align: center;
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 20px;
+        }
+        
+        /* Стили для экрана профиля */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .profile-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #3390ec;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+        
+        .profile-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .balance-card {
+            background-color: #2a2a2a;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .balance-label {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+        
+        .balance-amount {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .top-up-btn {
+            background-color: #3390ec;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            cursor: pointer;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 24px 0 16px 0;
+        }
+        
+        .quests-card {
+            background-color: #2a2a2a;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .quests-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .quests-count {
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        .quests-earned {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .open-quests-btn {
+            background-color: transparent;
+            color: #3390ec;
+            border: 1px solid #3390ec;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            cursor: pointer;
+        }
+        
+        .referral-card {
+            background-color: #2a2a2a;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .referral-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .referral-count {
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        .referral-earned {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .claim-btn {
+            background-color: #3390ec;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            background-color: #2a2a2a;
+            border-radius: 12px;
+            padding: 8px;
+            margin-top: 20px;
+        }
+        
+        .nav-tab {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+            margin: 0 4px;
+        }
+        
+        .nav-tab.active {
+            background-color: #3390ec;
+        }
+    </style>
 </head>
 <body>
-    <div class="app">
-        <!-- Header -->
-        <header class="header">
-            <div class="user-info">
-                <img id="userAvatar" src="images/avatar-placeholder.png" alt="Avatar" class="avatar">
-                <div class="balance">
-                    <span id="userBalance">0</span> TON
-                </div>
+    <!-- Экран турнира -->
+    <div id="tournament-screen">
+        <div class="header">
+            <div class="close-btn">Закрыть</div>
+        </div>
+        
+        <div class="tournament-title">Lucky Турнир</div>
+        
+        <div class="player-card">
+            <div class="player-info">
+                <div class="player-name">@samirmgrv</div>
+                <div class="player-status">ПРЕД. ИГРА</div>
             </div>
-            <button class="btn-top" onclick="showTop()">🏆 Топ</button>
-        </header>
-
-        <!-- Main Game Screen -->
-        <main class="main">
-            <!-- Game Info -->
-            <div class="game-info">
-                <div class="bank">
-                    <h2>🎯 ОБЩИЙ БАНК</h2>
-                    <div id="totalBank" class="bank-amount">0 TON</div>
-                </div>
-                <div class="timer">
-                    <span id="timer">0:30</span>
-                </div>
+            <div class="player-stats">
+                <div class="player-ton">+38 TON</div>
+                <div class="player-chance">ШАНС 48%</div>
             </div>
-
-            <!-- Players List -->
-            <div class="players-section">
-                <h3>Текущие игроки:</h3>
-                <div id="playersList" class="players-list">
-                    <!-- Players will be added here dynamically -->
-                </div>
+        </div>
+        
+        <div class="player-card">
+            <div class="player-info">
+                <div class="player-name">@giftgam...</div>
+                <div class="player-status">ТОП ИГРА</div>
             </div>
-
-            <!-- Bet Panel -->
-            <div class="bet-panel">
-                <h3>Ваша ставка:</h3>
-                <div class="bet-controls">
-                    <button class="bet-btn" onclick="changeBet(-1)">-</button>
-                    <input type="number" id="betAmount" value="5" min="1" class="bet-input">
-                    <button class="bet-btn" onclick="changeBet(1)">+</button>
-                </div>
-                <div class="quick-bets">
-                    <button class="quick-bet" onclick="setQuickBet(5)">5</button>
-                    <button class="quick-bet" onclick="setQuickBet(10)">10</button>
-                    <button class="quick-bet" onclick="setQuickBet(20)">20</button>
-                    <button class="quick-bet" onclick="setQuickBet(50)">50</button>
-                </div>
-                <div class="chance">
-                    Ваш шанс: <span id="userChance">0%</span>
-                </div>
-                <button id="placeBetBtn" class="btn-bet" onclick="placeBet()">
-                    🎰 СДЕЛАТЬ СТАВКУ
-                </button>
+            <div class="player-stats">
+                <div class="player-ton">+48603 TON</div>
+                <div class="player-chance">ШАНС 82%</div>
             </div>
-
-            <!-- Recent Winners -->
-            <div class="winners-section">
-                <h3>🎉 Последние победители:</h3>
-                <div id="recentWinners" class="winners-list">
-                    <!-- Winners will be added here -->
-                </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="total-section">
+            <div class="total-label">ВСЕГО</div>
+            <div class="total-amount">8.35 TON</div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="timer">00:03</div>
+        
+        <div class="divider"></div>
+        
+        <div class="bet-section">
+            <div class="bet-amount">1.43 TON</div>
+            <button class="add-pvp-btn">Добавить в PvP</button>
+        </div>
+        
+        <div class="game-info">
+            8 Игроков<br>
+            Игра #194292
+        </div>
+    </div>
+    
+    <!-- Экран профиля -->
+    <div id="profile-screen" class="hidden">
+        <div class="header">
+            <div class="close-btn">Закрыть</div>
+        </div>
+        
+        <div class="profile-header">
+            <div class="profile-avatar">K</div>
+            <div class="profile-name">@kagion</div>
+        </div>
+        
+        <div class="balance-card">
+            <div class="balance-label">Rolls баланс</div>
+            <div class="balance-amount">0 TON</div>
+            <button class="top-up-btn">Пополнить</button>
+        </div>
+        
+        <div class="section-title">Выполняй задания и получай ролисы бесплатно</div>
+        
+        <div class="quests-card">
+            <div class="quests-progress">
+                <div class="quests-count">Выполнено: 21 / 23</div>
+                <div class="quests-earned">Всего заработано: 21 Rolls</div>
             </div>
-        </main>
-
-        <!-- Navigation -->
-        <nav class="navigation">
-            <button class="nav-btn active" onclick="showScreen('game')">🎮 Игра</button>
-            <button class="nav-btn" onclick="showScreen('wallet')">💰 Кошелек</button>
-            <button class="nav-btn" onclick="showScreen('history')">📊 История</button>
-            <button class="nav-btn" onclick="showScreen('gifts')">🎁 Подарки</button>
-        </nav>
+            <button class="open-quests-btn">Открыть задания</button>
+        </div>
+        
+        <div class="section-title">Приглашай друзей и получай 10% с их комиссий</div>
+        
+        <div class="referral-card">
+            <div class="referral-stats">
+                <div class="referral-count">Приглашено: 0 Друзей</div>
+                <div class="referral-earned">Всего заработано: 0 TON</div>
+            </div>
+            <button class="claim-btn">Забрать 0 TON</button>
+        </div>
+    </div>
+    
+    <!-- Навигационные табы -->
+    <div class="nav-tabs">
+        <div class="nav-tab active" id="tournament-tab">Турнир</div>
+        <div class="nav-tab" id="profile-tab">Профиль</div>
     </div>
 
-    <script src="js/app.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/wallet.js"></script>
+    <script>
+        // Инициализация Telegram Web App
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+        
+        // Получение элементов DOM
+        const tournamentScreen = document.getElementById('tournament-screen');
+        const profileScreen = document.getElementById('profile-screen');
+        const tournamentTab = document.getElementById('tournament-tab');
+        const profileTab = document.getElementById('profile-tab');
+        const closeButtons = document.querySelectorAll('.close-btn');
+        
+        // Обработчики событий для навигации
+        tournamentTab.addEventListener('click', () => {
+            tournamentScreen.classList.remove('hidden');
+            profileScreen.classList.add('hidden');
+            tournamentTab.classList.add('active');
+            profileTab.classList.remove('active');
+        });
+        
+        profileTab.addEventListener('click', () => {
+            tournamentScreen.classList.add('hidden');
+            profileScreen.classList.remove('hidden');
+            tournamentTab.classList.remove('active');
+            profileTab.classList.add('active');
+        });
+        
+        // Обработчики для кнопок закрытия
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tg.close();
+            });
+        });
+        
+        // Таймер обратного отсчета
+        function updateTimer() {
+            const timerElement = document.querySelector('.timer');
+            let time = 3;
+            
+            const countdown = setInterval(() => {
+                if (time <= 0) {
+                    clearInterval(countdown);
+                    timerElement.textContent = "00:00";
+                    // Здесь можно добавить логику завершения игры
+                } else {
+                    timerElement.textContent = `00:${time.toString().padStart(2, '0')}`;
+                    time--;
+                }
+            }, 1000);
+        }
+        
+        // Запуск таймера при загрузке страницы
+        updateTimer();
+    </script>
 </body>
 </html>
