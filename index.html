@@ -3,21 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎰 Crypto Roulette</title>
+    <title>🎰 TON Roulette</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
+        <!-- Шапка -->
         <div class="header">
-            <h1>🎰 CRYPTO ROULETTE</h1>
-            <div class="balance">
-                <span>Баланс: </span>
-                <span id="balance">1000</span> 🪙
+            <h1>🎰 TON ROULETTE</h1>
+            <div class="user-info">
+                <div class="balance">
+                    <span>Баланс: </span>
+                    <span id="balance">0</span> 💎
+                </div>
+                <button id="connectWallet" class="wallet-btn">🔗 Подключить TON</button>
             </div>
         </div>
 
+        <!-- Кошелёк -->
+        <div id="walletSection" class="wallet-section hidden">
+            <h3>💰 Управление балансом</h3>
+            <div class="wallet-controls">
+                <button onclick="deposit(5)">+5 TON</button>
+                <button onclick="deposit(10)">+10 TON</button>
+                <button onclick="deposit(20)">+20 TON</button>
+                <button onclick="withdraw()">Вывести</button>
+            </div>
+            <div class="wallet-address" id="walletAddress"></div>
+        </div>
+
+        <!-- Игровая зона -->
         <div class="game-area">
+            <!-- Таймер раунда -->
+            <div class="round-timer">
+                <div class="timer-bar">
+                    <div class="timer-progress" id="timerProgress"></div>
+                </div>
+                <div class="timer-text" id="timerText">Ставки принимаются: 30с</div>
+            </div>
+
+            <!-- Рулетка -->
             <div class="wheel-container">
                 <div class="wheel" id="wheel">
                     <div class="wheel-inner">
@@ -28,38 +55,53 @@
                 </div>
             </div>
 
-            <div class="controls">
-                <div class="bet-section">
-                    <h3>Ставка</h3>
+            <!-- Ставки -->
+            <div class="betting-section">
+                <h3>💵 Сделать ставку</h3>
+                <div class="bet-controls">
                     <div class="bet-amount">
-                        <button onclick="changeBet(-100)">-100</button>
-                        <span id="currentBet">100</span> 🪙
-                        <button onclick="changeBet(100)">+100</button>
+                        <button onclick="changeBet(-1)">-1</button>
+                        <span id="currentBet">1</span> TON
+                        <button onclick="changeBet(1)">+1</button>
+                    </div>
+                    <div class="bet-multiplier">
+                        <select id="multiplierSelect" onchange="updatePotentialWin()">
+                            <option value="2">2x (50%)</option>
+                            <option value="5">5x (20%)</option>
+                            <option value="10" selected>10x (10%)</option>
+                            <option value="20">20x (5%)</option>
+                        </select>
                     </div>
                 </div>
-
-                <div class="multipliers">
-                    <h3>Множители</h3>
-                    <div class="multiplier-buttons">
-                        <button class="multiplier-btn" data-multiplier="2" onclick="selectMultiplier(2)">2x</button>
-                        <button class="multiplier-btn" data-multiplier="5" onclick="selectMultiplier(5)">5x</button>
-                        <button class="multiplier-btn active" data-multiplier="10" onclick="selectMultiplier(10)">10x</button>
-                    </div>
+                <div class="potential-win">
+                    Возможный выигрыш: <span id="potentialWin">10</span> TON
                 </div>
-
-                <button class="spin-btn" id="spinBtn" onclick="spinWheel()">🎰 КРУТИТЬ!</button>
-            </div>
-
-            <div class="result" id="result">
-                <div class="result-text" id="resultText"></div>
-                <div class="win-amount" id="winAmount"></div>
+                <button class="place-bet-btn" id="placeBetBtn" onclick="placeBet()">🎯 Сделать ставку</button>
             </div>
         </div>
 
-        <div class="history">
-            <h3>История</h3>
+        <!-- Текущие ставки -->
+        <div class="current-bets">
+            <h3>📊 Текущие ставки</h3>
+            <div class="bets-list" id="betsList">
+                <div class="no-bets">Ставок пока нет</div>
+            </div>
+        </div>
+
+        <!-- История игроков -->
+        <div class="players-online">
+            <h3>👥 Игроки онлайн: <span id="playersCount">0</span></h3>
+            <div class="players-list" id="playersList"></div>
+        </div>
+
+        <!-- Последние результаты -->
+        <div class="game-history">
+            <h3>📈 История игр</h3>
             <div class="history-list" id="historyList"></div>
         </div>
+
+        <!-- Уведомления -->
+        <div id="notification" class="notification hidden"></div>
     </div>
 
     <script src="script.js"></script>
