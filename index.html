@@ -1,0 +1,69 @@
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎰 Crypto Roulette</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎰 CRYPTO ROULETTE</h1>
+            <div class="balance">
+                <span>Баланс: </span>
+                <span id="balance">1000</span> 🪙
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="wheel-container">
+                <div class="wheel" id="wheel">
+                    <div class="wheel-inner">
+                        <div class="wheel-numbers" id="wheelNumbers"></div>
+                        <div class="wheel-center"></div>
+                        <div class="wheel-pointer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="bet-section">
+                    <h3>Ставка</h3>
+                    <div class="bet-amount">
+                        <button onclick="changeBet(-100)">-100</button>
+                        <span id="currentBet">100</span> 🪙
+                        <button onclick="changeBet(100)">+100</button>
+                    </div>
+                </div>
+
+                <div class="multipliers">
+                    <h3>Множители</h3>
+                    <div class="multiplier-buttons">
+                        <button class="multiplier-btn" data-multiplier="2" onclick="selectMultiplier(2)">2x</button>
+                        <button class="multiplier-btn" data-multiplier="5" onclick="selectMultiplier(5)">5x</button>
+                        <button class="multiplier-btn active" data-multiplier="10" onclick="selectMultiplier(10)">10x</button>
+                    </div>
+                </div>
+
+                <button class="spin-btn" id="spinBtn" onclick="spinWheel()">🎰 КРУТИТЬ!</button>
+            </div>
+
+            <div class="result" id="result">
+                <div class="result-text" id="resultText"></div>
+                <div class="win-amount" id="winAmount"></div>
+            </div>
+        </div>
+
+        <div class="history">
+            <h3>История</h3>
+            <div class="history-list" id="historyList"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+```
